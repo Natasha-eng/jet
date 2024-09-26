@@ -37,6 +37,7 @@ export default class ContactsView extends JetView {
 		this.contacts.parse(contacts);
 
 		this.on(this.contacts, "onSelectChange", (id) => {
+			
 			if (!id[0]) {
 				this.setParam("id", null, true);
 			} else {

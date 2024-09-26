@@ -126,3 +126,10 @@
     padding: 7px;
     border-radius: 5px;
 }
+
+/* popup styles */
+.popoUpTitle {
+    text-align: center;
+    font-weight: 500;
+    font-size: 30px;
+}

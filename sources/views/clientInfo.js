@@ -20,7 +20,7 @@ export default class СlientInfo extends JetView {
                                         <div class="contactContainer">
                                             <div> 
                                                 <img src=${obj.Photo || "../../assets/no-avatar.jpg"} alt="avatar" width="200" height="200">
-                                                <div>${obj.StatusID}</div> 
+                                                <div>${obj.status}</div> 
                                             </div>
                                     
                                             <div class="infoItem">
@@ -78,12 +78,20 @@ export default class СlientInfo extends JetView {
     }
 
     urlChange(view, url) {
-        const clientInfo = this.$$("clientInfo");
+        this.clientInfo = this.$$("clientInfo");
+
         const id = url[0].params.id;
 
-        if (id) {
-            const contact = contacts.getItem(id);
-            clientInfo.setValues(contact);
-        }
+        this.clientInfo.parse(statuses).then(() => {
+            if (id) {
+                const contact = contacts.getItem(id);
+                const status = statuses.find((s) => s.id == contact.StatusID)
+                const contactWithStatus = { ...contact, status: status[0].Value }
+
+                this.clientInfo.setValues(contactWithStatus);
+            }
+        });
+
+
     }
 }
