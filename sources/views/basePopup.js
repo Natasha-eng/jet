@@ -22,8 +22,18 @@ export default class PopupView extends JetView {
                 view: "form",
 
                 elements: [
-                    { template: this.grid_config.title, height: 40, borderless: true, css: "popoUpTitle" },
-                    { view: "textarea", label: "Details", name: "Details" },
+                    {
+                        template: this.grid_config.title,
+                        height: 40,
+                        borderless: true,
+                        css: "popoUpTitle"
+                    },
+                    {
+                        view: "textarea",
+                        label: "Details",
+                        name: "Details",
+                        invalidMessage: "Details must be filled in",
+                    },
                     {
                         view: "select",
                         label: "Type",
@@ -31,7 +41,8 @@ export default class PopupView extends JetView {
                         options: [
                             { "id": 1, "value": "Master" },
                             { "id": 2, "value": "Release" }
-                        ]
+                        ],
+                        invalidMessage: "Type must be selected",
                     },
                     {
                         view: "select",
@@ -40,21 +51,26 @@ export default class PopupView extends JetView {
                         options: [
                             { "id": 1, "value": "Master" },
                             { "id": 2, "value": "Release" }
-                        ]
+                        ],
+                        invalidMessage: "Contact must be selected",
                     },
                     {
                         view: "datepicker",
                         name: "DueDate",
                         label: "Date",
-
+                        format: webix.Date.dateToStr("%Y-%m-%d"),
                     },
                     {
                         view: "datepicker",
+                        name: "TimeDate",
                         label: "Time",
-                        name: "DueDate",
-                        timepicker: true,
-                        format: "%H:%i"
-
+                        type: "time",
+                        suggest: {
+                            type: "timeboard",
+                            body: {
+                                button: true
+                            }
+                        }
                     },
                     {
                         view: "checkbox",
@@ -70,6 +86,7 @@ export default class PopupView extends JetView {
                                 label: "Cancel",
                                 width: 100,
                                 click: () => {
+                                    this.form.clearValidation();
                                     this.hideWindow();
                                 }
                             },
@@ -79,22 +96,62 @@ export default class PopupView extends JetView {
                                 label: this.grid_config.buttonValue,
                                 width: 100,
                                 click: () => {
-                                    if (this.grid_config.type === "add") {
-                                        console.log('add', this.grid_config.type)
-                                        const formData = this.form.getValues();
-                                        console.log('formData 2', formData)
-                                        activities.add(formData)
-                                    } else if (this.grid_config.type === "edit") {
-                                  
+                                    const formData = this.form.getValues();
+                                    const isValid = this.form.validate();
+                                    if (isValid) {
+                                        if (this.grid_config.type === "add") {
+                                            const formData = this.form.getValues();
+                                            const date = new Date(formData.DueDate)
+                                            const time = new Date(formData.TimeDate)
+                                            const hours = time.getHours()
+                                            const minutes = time.getMinutes()
+                                            console.log('hours minutes', hours, minutes)
+                                            const newd = date.setHours(hours, minutes)
+                                            const newDate = new Date(newd)
+
+                                            const format = webix.Date.dateToStr("%Y-%m-%d %H:%i");
+                                            const newFormat = format(newDate)
+                                           
+                                            const newFormData = {
+                                                "Details": formData.Details,
+                                                "TypeID": formData.TypeID,
+                                                "State": formData.State,
+                                                "ContactID": formData.ContactID,
+                                                "DueDate": newFormat
+                                            }
+
+                                            activities.add(newFormData)
+                                            webix.message("New activity is added");
+                                        } else if (this.grid_config.type === "edit") {
+
+                                            if (this.form.isDirty()) {
+                                                this.form.setDirty();
+                                                const formData = this.form.getValues();
+                                                console.log('form data', formData)
+                                                activities.updateItem(formData.id, formData);
+                                                webix.message("Activity is updated.");
+                                            } else {
+                                                webix.message("Contact hasn't been changed.");
+                                            }
+                                        }
+                                        this.hideWindow();
                                     }
-                                    this.hideWindow();
-                                    webix.message(this.grid_config.message);
+
+
                                 }
                             },
                             {}
                         ]
                     },
-                ]
+                ],
+
+                rules: {
+                    TypeID: webix.rules.isNotEmpty,
+                    ContactID: webix.rules.isNotEmpty,
+                    Details: webix.rules.isNotEmpty,
+                    // ContactID:webix.rules.isNotEmpty,
+
+                },
 
             }
         };
@@ -102,12 +159,9 @@ export default class PopupView extends JetView {
 
     init() {
         this.form = this.$$("formPopup").getBody();
-
-
     }
     showWindow() {
         this.getRoot().show();
-
     }
 
     hideWindow() {

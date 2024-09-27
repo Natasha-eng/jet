@@ -6,12 +6,7 @@ export default class AddPopup extends PopupView {
         super(app, {
             title: "Add activity",
             buttonValue: "Add",
-            message: "New activity is added",
             type: "add"
         });
-    }
-
-    init() {
-        this.form = this.$$("formPopup").getBody();
     }
 }

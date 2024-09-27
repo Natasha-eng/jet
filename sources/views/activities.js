@@ -35,12 +35,8 @@ export default class DataView extends JetView {
 							id: "TypeID",
 							header: ["Activity type", { content: "selectFilter" }],
 							fillspace: true,
-							collection: {
-								body: {
-									template: "#Value#"
-								},
-								data: activityTypes
-							},
+							options: activityTypes,
+
 							sort: "string"
 						},
 						{
@@ -61,12 +57,7 @@ export default class DataView extends JetView {
 							localId: "contact",
 							header: ["Contact", { content: "selectFilter" }],
 							fillspace: true,
-							collection: {
-								body: {
-									template: "#FirstName#"
-								},
-								data: contacts
-							},
+							options: contacts,
 
 							sort: "string"
 						},
@@ -82,6 +73,7 @@ export default class DataView extends JetView {
 							template: "<span class='removeBtn webix_icon wxi-trash'></span>",
 						},
 					],
+			
 					select: true,
 					editable: true,
 					scrollX: false,
@@ -95,41 +87,31 @@ export default class DataView extends JetView {
 
 
 						removeBtn: function (ev, id) {
-
-							activities.remove(id);
+							webix
+								.confirm({
+									text: "Deleting cannot be undone. Delete activity?",
+								})
+								.then(
+									function () {
+										activities.remove(id);
+										webix.message("Activity has been deleted.");
+									},
+									function () {
+										webix.message("Canceled");
+									}
+								);
 							return false;
-
 						}
-
 					}
-
-
 				},
-
 			]
 		}
 	}
 	init() {
 		this.activities = this.$$("activities");
-		this.$$("activities").parse(activities).then(() => {
-
-		});
-
-
-		this.app.setService("state", {
-			getState: () => { return this.state },
-			setState: (state) => { this.state = state }
-		});
-
-
-
-		this.on(this.activities, "onSelectChange", (selection, preserve) => {
-			const selecteItem = this.activities.getSelectedItem();
-			this.app.getService("state").setState(selecteItem);
-
-		});
-
-
+		this.activities.parse(activities);
+		// this.activities.parse(contacts);
+		// this.activities.parse(activityTypes);
 
 		activities.waitData.then(() => {
 			const firstId = activities.getFirstId();

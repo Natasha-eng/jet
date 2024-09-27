@@ -7,26 +7,18 @@ export default class EditPopup extends PopupView {
             data: activities,
             title: "Edit activity",
             buttonValue: "Edit",
-            message: "Activity is updated",
             type: "edit"
         });
     }
 
-    ready() {
-        const param = this.getParam("id")
-        console.log('param', param)
-
-    }
-
     init() {
         this.form = this.$$("formPopup").getBody();
+        const master = this.getParentView().$$("activities");
 
-        this.on(this.$$("formPopup"), "onShow", () => {
-            const item = this.app.getService("state").getState()
-            console.log('pop up showed, item', item)
-            this.form.setValues(item)
-
-        })
+        this.on(master, "onSelectChange", (selection, preserve) => {
+            const selecteItem = master.getSelectedItem();
+            this.form.setValues(selecteItem)
+        });
 
     }
 
