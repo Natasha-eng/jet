@@ -1,6 +1,6 @@
 import { JetView } from "webix-jet";
 import { contacts } from "../models/contacts";
-import ClientInfo from "./clientInfo.js"
+import ClientInfo from "./clientInfo.js";
 
 export default class ContactsView extends JetView {
 	config() {
@@ -28,12 +28,10 @@ export default class ContactsView extends JetView {
 				},
 				ClientInfo
 			]
-		}
-
-
+		};
 	}
 	init() {
-		this.contacts = this.$$("contacts")
+		this.contacts = this.$$("contacts");
 		this.contacts.parse(contacts);
 
 		this.on(this.contacts, "onSelectChange", (id) => {
@@ -50,6 +48,6 @@ export default class ContactsView extends JetView {
 			const firstId = contacts.getFirstId();
 			if (firstId)
 				this.contacts.select(firstId);
-		})
+		});
 	}
 }

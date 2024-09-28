@@ -2,24 +2,34 @@ import { activities } from "../models/activities";
 import PopupView from "./basePopup";
 
 export default class EditPopup extends PopupView {
-    constructor(app) {
-        super(app, {
-            data: activities,
-            title: "Edit activity",
-            buttonValue: "Edit",
-            type: "edit"
-        });
-    }
+	constructor(app) {
+		super(app, {
+			data: activities,
+			title: "Edit activity",
+			buttonValue: "Edit",
+			edit: true,
+		});
+		
+	}
 
-    init() {
-        this.form = this.$$("formPopup").getBody();
-        const master = this.getParentView().$$("activities");
+	setFromData(selecteItem) {
+		const dueData = selecteItem.DueDate;
 
-        this.on(master, "onSelectChange", (selection, preserve) => {
-            const selecteItem = master.getSelectedItem();
-            this.form.setValues(selecteItem)
-        });
+		const date = new Date(dueData);
+		const format = webix.Date.dateToStr("%H:%i");
+		const newTimeFormat = format(dueData);
 
-    }
+		const newFormData = {
+			...selecteItem,
+			DueDate: date,
+			TimeDate: newTimeFormat,
+		};
 
+		this.form.setValues(newFormData);
+	}
+
+	init() {
+		this.form = this.$$("formPopup").getBody();
+		this.popupFunc = this.editActivity;
+	}
 }

@@ -1,5 +1,5 @@
 import { JetView } from "webix-jet";
-import { activities } from "../models/activities.js"
+import { activities } from "../models/activities.js";
 import { activityTypes } from "../models/activityTypes.js";
 import { contacts } from "../models/contacts.js";
 import AddPopup from "./addActivityPopup.js";
@@ -36,7 +36,6 @@ export default class DataView extends JetView {
 							header: ["Activity type", { content: "selectFilter" }],
 							fillspace: true,
 							options: activityTypes,
-
 							sort: "string"
 						},
 						{
@@ -54,16 +53,13 @@ export default class DataView extends JetView {
 						},
 						{
 							id: "ContactID",
-							localId: "contact",
 							header: ["Contact", { content: "selectFilter" }],
 							fillspace: true,
 							options: contacts,
-
 							sort: "string"
 						},
 						{
 							id: "edit",
-							localId: "edit",
 							header: "",
 							template: "<span class='editBtn webix_icon wxi-pencil'></span>",
 						},
@@ -77,14 +73,13 @@ export default class DataView extends JetView {
 					select: true,
 					editable: true,
 					scrollX: false,
-
 					css: "webix_shadow_medium",
 					onClick: {
 						editBtn: (ev, id) => {
-							console.log('edit opened')
+							const activity = this.activities.getItem(id);
 							this.EditPopup.showWindow();
+							this.EditPopup.setFromData(activity);
 						},
-
 
 						removeBtn: function (ev, id) {
 							webix
@@ -105,19 +100,17 @@ export default class DataView extends JetView {
 					}
 				},
 			]
-		}
+		};
 	}
 	init() {
 		this.activities = this.$$("activities");
 		this.activities.parse(activities);
-		// this.activities.parse(contacts);
-		// this.activities.parse(activityTypes);
 
 		activities.waitData.then(() => {
 			const firstId = activities.getFirstId();
 			if (firstId)
 				this.activities.select(firstId);
-		})
+		});
 
 		this.EditPopup = this.ui(EditPopup);
 		this.AddPopup = this.ui(AddPopup);
