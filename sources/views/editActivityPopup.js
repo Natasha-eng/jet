@@ -30,6 +30,5 @@ export default class EditPopup extends PopupView {
 
 	init() {
 		this.form = this.$$("formPopup").getBody();
-		this.popupFunc = this.editActivity;
 	}
 }
