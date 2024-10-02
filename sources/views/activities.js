@@ -2,8 +2,7 @@ import { JetView } from "webix-jet";
 import { activities } from "../models/activities.js";
 import { activityTypes } from "../models/activityTypes.js";
 import { contacts } from "../models/contacts.js";
-import AddPopup from "./addActivityPopup.js";
-import EditPopup from "./editActivityPopup.js";
+import PopupView from "./basePopup.js";
 
 
 export default class DataView extends JetView {
@@ -16,7 +15,7 @@ export default class DataView extends JetView {
 					inputWidth: 150,
 					css: "webix_primary",
 					click: () => {
-						this.AddPopup.showWindow();
+						this.Popup.showWindow();
 					}
 				},
 				{
@@ -69,16 +68,15 @@ export default class DataView extends JetView {
 							template: "<span class='removeBtn webix_icon wxi-trash'></span>",
 						},
 					],
-			
+
 					select: true,
 					editable: true,
 					scrollX: false,
 					css: "webix_shadow_medium",
 					onClick: {
 						editBtn: (ev, id) => {
-							const activity = this.activities.getItem(id);
-							this.EditPopup.showWindow();
-							this.EditPopup.setFromData(activity);
+							const activity = activities.getItem(id);
+							this.Popup.showWindow(activity);
 						},
 
 						removeBtn: function (ev, id) {
@@ -105,14 +103,12 @@ export default class DataView extends JetView {
 	init() {
 		this.activities = this.$$("activities");
 		this.activities.parse(activities);
-
 		activities.waitData.then(() => {
 			const firstId = activities.getFirstId();
 			if (firstId)
 				this.activities.select(firstId);
 		});
 
-		this.EditPopup = this.ui(EditPopup);
-		this.AddPopup = this.ui(AddPopup);
+		this.Popup = this.ui(PopupView);
 	}
 }

@@ -4,6 +4,7 @@ export const contacts = new webix.DataCollection({
 	scheme: {
 		$init: function (obj) {
 			obj.value = `${obj.FirstName} ${obj.LastName}`;
+			
 		},
 	},
 });

@@ -4,10 +4,6 @@ import { activityTypes } from "../models/activityTypes";
 import { contacts } from "../models/contacts";
 
 export default class PopupView extends JetView {
-	constructor(app, config) {
-		super(app);
-		this.grid_config = config;
-	}
 
 	config() {
 		return {
@@ -23,7 +19,8 @@ export default class PopupView extends JetView {
 
 				elements: [
 					{
-						template: this.grid_config.title,
+						template: (obj) => `${obj.mode == 1 ? "Edit" : "Add"}`,
+						localId: "title",
 						height: 40,
 						borderless: true,
 						css: "popoUpTitle",
@@ -52,12 +49,14 @@ export default class PopupView extends JetView {
 						view: "datepicker",
 						name: "DueDate",
 						label: "Date",
-						format: webix.Date.dateToStr("%Y-%m-%d"),
+						value: new Date()
+						// format: webix.Date.strToDate("%Y-%m-%d"),
 					},
 					{
 						view: "datepicker",
 						name: "TimeDate",
 						label: "Time",
+						value: new Date(),
 						type: "time",
 						twelve: false,
 						suggest: {
@@ -88,14 +87,16 @@ export default class PopupView extends JetView {
 							},
 							{
 								view: "button",
-								css: "webix_primary",
-								label: this.grid_config.buttonValue,
+								localId: "popup-button",
+								css: "webi,x_primary",
+
 								width: 100,
 								click: () => {
-									const formData = this.form.getValues();
+									
 									const isValid = this.form.validate();
 									if (isValid) {
-										if (this.grid_config.edit) {
+										const formData = this.form.getValues();
+										if (formData.id) {
 											this.editActivity(formData);
 										} else {
 											this.addActivity(formData);
@@ -121,7 +122,19 @@ export default class PopupView extends JetView {
 	init() {
 		this.form = this.$$("formPopup").getBody();
 	}
-	showWindow() {
+	showWindow(activity) {
+		this.form.clear();
+		const titleForm = this.form.$scope.$$("title");
+		const buttonForm = this.form.$scope.$$("popup-button");	
+		if (activity) {
+			titleForm.setValues({ mode: 1 });
+			buttonForm.setValue("Edit");
+			this.setFromData(activity);
+		} else {
+			titleForm.setValues({ mode: 0 });
+			buttonForm.setValue("Add");
+		}
+
 		this.getRoot().show();
 	}
 
@@ -132,9 +145,7 @@ export default class PopupView extends JetView {
 	editActivity(formData) {
 		if (this.form.isDirty()) {
 			this.form.setDirty();
-			const newFormData = this.formatDate(formData);
-
-			activities.updateItem(formData.id, newFormData);
+			activities.updateItem(formData.id, formData);
 			webix.message("Activity is updated.");
 		} else {
 			webix.message("Contact hasn't been changed.");
@@ -142,30 +153,12 @@ export default class PopupView extends JetView {
 	}
 
 	addActivity(formData) {
-		const newFormData = this.formatDate(formData);
-
-		activities.add(newFormData);
+		activities.add(formData);
 		this.form.clear();
 		webix.message("New activity is added");
 	}
 
-	formatDate(formData) {
-		const date = new Date(formData.DueDate);
-		const time = new Date(formData.TimeDate);
-
-		const hours = time.getHours();
-		const minutes = time.getMinutes();
-
-		const newd = date.setHours(hours, minutes);
-		const newDate = new Date(newd);
-
-		const format = webix.Date.dateToStr("%Y-%m-%d %H:%i");
-		const newFormat = format(newDate);
-
-		const newFormData = {
-			...formData,
-			DueDate: newFormat,
-		};
-		return newFormData;
+	setFromData(selecteItem) {
+		this.form.setValues(selecteItem);
 	}
 }
