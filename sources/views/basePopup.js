@@ -19,7 +19,7 @@ export default class PopupView extends JetView {
 
 				elements: [
 					{
-						template: (obj) => `${obj.mode == 1 ? "Edit" : "Add"}`,
+						template: "#action#",
 						localId: "title",
 						height: 40,
 						borderless: true,
@@ -121,15 +121,14 @@ export default class PopupView extends JetView {
 	showWindow(activity) {
 		const titleForm = this.$$("title");
 		const buttonForm = this.$$("popup-button");
+		let action = "Add";
 		if (activity) {
-			titleForm.setValues({ mode: 1 });
-			buttonForm.setValue("Edit");
+			action = "Edit";
 			this.setFormData(activity);
-		} else {
-			titleForm.setValues({ mode: 0 });
-			buttonForm.setValue("Add");
 		}
 
+		titleForm.setValues({ action });
+		buttonForm.setValue(action);
 		this.getRoot().show();
 	}
 
