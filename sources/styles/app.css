@@ -1,58 +1,146 @@
-.webixappstart{
-    opacity:0;
+.webixappstart {
+  opacity: 0;
 }
-.webixapp{
-    transition: opacity 500ms;
-    opacity: 1;
+
+.webixapp {
+  transition: opacity 500ms;
+  opacity: 1;
 }
 
 /*data loading status*/
-.status_good, .status_error, .status_saving{
-	text-align: center;
-	margin-left:-12px;
+.status_good,
+.status_error,
+.status_saving {
+  text-align: center;
+  margin-left: -12px;
 }
-.status_error{
-	color:red;
+
+.status_error {
+  color: red;
 }
-.status_good{
-	color:green;
+
+.status_good {
+  color: green;
 }
 
 /*login form*/
-.invalid_login .webix_header > div{
-    background: #FC3636;
-    transition: background 1s;
+.invalid_login .webix_header > div {
+  background: #fc3636;
+  transition: background 1s;
 }
-.invalid_login{
-    -webkit-animation: formshake .5s linear;
+
+.invalid_login {
+  -webkit-animation: formshake 0.5s linear;
 }
+
 @-webkit-keyframes formshake {
-    8%, 41% {
-        -webkit-transform: translateX(-10px);
-    }
-    25%, 58% {
-        -webkit-transform: translateX(10px);
-    }
-    75% {
-        -webkit-transform: translateX(-5px);
-    }
-    92% {
-        -webkit-transform: translateX(5px);
-    }
-    0%, 100% {
-        -webkit-transform: translateX(0);
-    }
+  8%,
+  41% {
+    -webkit-transform: translateX(-10px);
+  }
+
+  25%,
+  58% {
+    -webkit-transform: translateX(10px);
+  }
+
+  75% {
+    -webkit-transform: translateX(-5px);
+  }
+
+  92% {
+    -webkit-transform: translateX(5px);
+  }
+
+  0%,
+  100% {
+    -webkit-transform: translateX(0);
+  }
 }
-.app_header.webix_header{
-	text-align:center;
+
+.app_header.webix_header {
+  text-align: center;
 }
-.app_layout.webix_layout_clean{
-	background: #EBEDF0;
+
+.app_layout.webix_layout_clean {
+  background: #ebedf0;
 }
-.app_start .webix_template{
-	padding:12px 12px;
+
+.app_start .webix_template {
+  padding: 12px 12px;
 }
-.app_menu .webix_icon{
-	font-size:20px;
-	vertical-align:middle;
+
+.app_menu .webix_icon {
+  font-size: 20px;
+  vertical-align: middle;
+}
+
+.contacts {
+  display: flex;
+  align-items: center;
+}
+
+.webix_list_item:hover {
+    background-color: #e0e3eb;
+}
+
+.contacts img {
+  border-radius: 50%;
+}
+
+.contacts .contactsInfo {
+  flex-grow: 2;
+  margin-left: 10px;
+}
+
+.contacts .contactCompany {
+  font-size: 12px;
+}
+
+/* contact profile */
+.contact {
+  display: flex;
+  padding: 20px;
+}
+
+.infoWrapper {
+  flex: 70%;
+}
+
+.contactContainer {
+  display: flex;
+  padding-top: 10px;
+}
+
+.infoItem {
+  padding: 20px;
+}
+
+.infoItem div {
+  padding-bottom: 20px;
+}
+
+.status {
+  text-align: center;
+}
+
+.contact-buttons {
+  flex: 30%;
+}
+
+.contact-buttons button {
+  width: 80px;
+  padding: 7px;
+  border-radius: 5px;
+}
+
+.contact-buttons button:hover {
+  background-color: #e0e3eb;
+}
+
+/* popup styles */
+.popoUpTitle {
+  text-align: center;
+  font-weight: 500;
+  font-size: 30px;
 }
