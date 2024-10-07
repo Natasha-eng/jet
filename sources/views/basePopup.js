@@ -141,7 +141,6 @@ export default class PopupView extends JetView {
 
 	editActivity(formData) {
 		if (this.form.isDirty()) {
-			this.form.setDirty();
 			activities.updateItem(formData.id, formData);
 			webix.message("Activity is updated.");
 		} else {
