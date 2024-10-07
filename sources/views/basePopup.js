@@ -49,14 +49,11 @@ export default class PopupView extends JetView {
 						view: "datepicker",
 						name: "DueDate",
 						label: "Date",
-						value: new Date()
-						// format: webix.Date.strToDate("%Y-%m-%d"),
 					},
 					{
 						view: "datepicker",
 						name: "TimeDate",
 						label: "Time",
-						value: new Date(),
 						type: "time",
 						twelve: false,
 						suggest: {
@@ -81,18 +78,17 @@ export default class PopupView extends JetView {
 								label: "Cancel",
 								width: 100,
 								click: () => {
-									this.form.clearValidation();
 									this.hideWindow();
 								},
 							},
 							{
 								view: "button",
 								localId: "popup-button",
-								css: "webi,x_primary",
+								css: "webix_primary",
 
 								width: 100,
 								click: () => {
-									
+
 									const isValid = this.form.validate();
 									if (isValid) {
 										const formData = this.form.getValues();
@@ -123,13 +119,12 @@ export default class PopupView extends JetView {
 		this.form = this.$$("formPopup").getBody();
 	}
 	showWindow(activity) {
-		this.form.clear();
-		const titleForm = this.form.$scope.$$("title");
-		const buttonForm = this.form.$scope.$$("popup-button");	
+		const titleForm = this.$$("title");
+		const buttonForm = this.$$("popup-button");
 		if (activity) {
 			titleForm.setValues({ mode: 1 });
 			buttonForm.setValue("Edit");
-			this.setFromData(activity);
+			this.setFormData(activity);
 		} else {
 			titleForm.setValues({ mode: 0 });
 			buttonForm.setValue("Add");
@@ -139,6 +134,8 @@ export default class PopupView extends JetView {
 	}
 
 	hideWindow() {
+		this.form.clearValidation();
+		this.form.clear();
 		this.getRoot().hide();
 	}
 
@@ -158,7 +155,7 @@ export default class PopupView extends JetView {
 		webix.message("New activity is added");
 	}
 
-	setFromData(selecteItem) {
+	setFormData(selecteItem) {
 		this.form.setValues(selecteItem);
 	}
 }
