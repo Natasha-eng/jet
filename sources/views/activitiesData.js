@@ -5,132 +5,132 @@ import PopupView from "./basePopup";
 import { contacts } from "../models/contacts";
 
 export default class ActivitiesData extends JetView {
-    config() {
-        return activities.waitData.then(() => {
-            return {
-                rows: [
-                    {
-                        view: "datatable",
-                        localId: "activities-table",
-                        height: 500,
-                        columns: [
-                            {
-                                id: "State",
-                                template: "{common.checkbox()}",
-                                checkValue: "Close",
-                                uncheckValue: "Open",
-                                header: "",
-                                width: 50
-                            },
-                            {
-                                id: "TypeID",
-                                header: ["Activity type", { content: "selectFilter" }],
-                                fillspace: true,
-                                options: activityTypes,
-                                sort: "string"
-                            },
-                            {
-                                id: "DueDate",
-                                header: ["Due date"],
-                                format: webix.Date.dateToStr("%Y-%m-%d %H:%i"),
-                                fillspace: true,
-                                sort: "string"
-                            },
-                            {
-                                id: "Details",
-                                header: ["Details", { content: "textFilter" }],
-                                fillspace: true,
-                                sort: "string"
-                            },
-                            {
-                                id: "edit",
-                                header: "",
-                                template: "<span class='editBtn webix_icon wxi-pencil'></span>",
-                            },
-                            {
-                                id: "deleteActivity",
-                                header: "",
-                                template: "<span class='removeBtn webix_icon wxi-trash'></span>",
-                            },
-                        ],
+	config() {
+		return activities.waitData.then(() => {
+			return {
+				rows: [
+					{
+						view: "datatable",
+						localId: "activities-table",
+						height: 500,
+						columns: [
+							{
+								id: "State",
+								template: "{common.checkbox()}",
+								checkValue: "Close",
+								uncheckValue: "Open",
+								header: "",
+								width: 50
+							},
+							{
+								id: "TypeID",
+								header: ["Activity type", { content: "selectFilter" }],
+								fillspace: true,
+								options: activityTypes,
+								sort: "string"
+							},
+							{
+								id: "DueDate",
+								header: ["Due date"],
+								format: webix.Date.dateToStr("%Y-%m-%d %H:%i"),
+								fillspace: true,
+								sort: "string"
+							},
+							{
+								id: "Details",
+								header: ["Details", { content: "textFilter" }],
+								fillspace: true,
+								sort: "string"
+							},
+							{
+								id: "edit",
+								header: "",
+								template: "<span class='editBtn webix_icon wxi-pencil'></span>",
+							},
+							{
+								id: "deleteActivity",
+								header: "",
+								template: "<span class='removeBtn webix_icon wxi-trash'></span>",
+							},
+						],
 
-                        select: true,
-                        editable: true,
-                        scrollX: false,
-                        onClick: {
-                            removeBtn: function (ev, id) {
-                                webix
-                                    .confirm({
-                                        text: "Deleting cannot be undone. Delete activity?",
-                                    })
-                                    .then(
-                                        function () {
-                                            activities.remove(id);
-                                            webix.message("Activity has been deleted.");
-                                        },
-                                        function () {
-                                            webix.message("Canceled");
-                                        }
-                                    );
-                                return false;
-                            },
-                            editBtn: (ev, id) => {
-                                const activity = activities.getItem(id);
-                                this.Popup.showWindow(activity, true);
-                            },
-                        },
-                    },
-                    {
-                        view: "button",
-                        value: "Add activity",
-                        css: "webix_primary",
-                        inputWidth: 200,
-                        click: () => {
-                            this.Popup.showWindow(null, true);
-                        }
-                    },
-                    {}
+						select: true,
+						editable: true,
+						scrollX: false,
+						onClick: {
+							removeBtn: function (ev, id) {
+								webix
+									.confirm({
+										text: "Deleting cannot be undone. Delete activity?",
+									})
+									.then(
+										function () {
+											activities.remove(id);
+											webix.message("Activity has been deleted.");
+										},
+										function () {
+											webix.message("Canceled");
+										}
+									);
+								return false;
+							},
+							editBtn: (ev, id) => {
+								const activity = activities.getItem(id);
+								this.Popup.showWindow(activity, true);
+							},
+						},
+					},
+					{
+						view: "button",
+						value: "Add activity",
+						css: "webix_primary",
+						inputWidth: 200,
+						click: () => {
+							this.Popup.showWindow(null, true);
+						}
+					},
+					{}
 
-                ]
-            };
-        })
-    }
-    init() {
-        this.activityTable = this.$$("activities-table");
-        const contactId = this.getParam("id", true);
-        this.filteredData = [];
-        if (contactId) {
-            this.filteredData = activities.find((obj) => {
+				]
+			};
+		});
+	}
+	init() {
+		this.activityTable = this.$$("activities-table");
+		const contactId = this.getParam("id", true);
+		this.filteredData = [];
+		if (contactId) {
+			this.filteredData = activities.find((obj) => {
 
-                return obj.ContactID == contactId
-            })
+				return obj.ContactID == contactId;
+			});
 
-        }
-
-
-
-        this.on(activities.data, "onStoreUpdated", (id, obj, mode) => {
-            if (mode === "add" || mode === "delete") {
-                this.filteredData = activities.find((obj) => {
-                    return obj.ContactID == contactId
-                })
-            }
-            this.activityTable.parse(this.filteredData);
-        });
-
-        this.activityTable.parse(this.filteredData);
-        this.Popup = this.ui(PopupView);
-
-    }
+		}
 
 
-    urlChange() {
-        let id = this.getParam("id", true);
-        this.filteredData = activities.find((obj) => {
-            return obj.ContactID.toString() === id
-        })
 
-        this.activityTable.parse(this.filteredData);
-    }
+		this.on(activities.data, "onStoreUpdated", (id, obj, mode) => {
+			if (mode === "add" || mode === "delete") {
+				this.filteredData = activities.find((obj) => {
+					return obj.ContactID == contactId;
+				});
+			}
+			this.activityTable.parse(this.filteredData);
+		});
+
+		this.activityTable.parse(this.filteredData);
+		this.Popup = this.ui(PopupView);
+
+	}
+
+
+	urlChange() {
+		let id = this.getParam("id", true);
+		this.filteredData = activities.find((obj) => {
+			return obj.ContactID.toString() === id;
+		});
+
+		this.activityTable.parse(this.filteredData);
+	}
 }
 

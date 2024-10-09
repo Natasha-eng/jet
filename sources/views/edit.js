@@ -17,7 +17,7 @@ export default class EditForm extends BaseContactForm {
 	}
 
 	init() {
-		this.form = this.$$("contactForm")
+		this.form = this.$$("contactForm");
 		const id = this.getParam("id", true);
 		if (id) {
 			const contact = contacts.getItem(id);

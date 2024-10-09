@@ -3,21 +3,22 @@ import { contacts } from "../models/contacts";
 import { statuses } from "../models/statuses";
 import UserActivities from "./userActivities";
 import { activities } from "../models/activities";
+import { files } from "../models/files";
 
 export default class СlientInfo extends JetView {
-    config() {
-        return webix.promise.all([
-            contacts.waitData,
-            statuses.waitData,
-        ]).then(() => {
+	config() {
+		return webix.promise.all([
+			contacts.waitData,
+			statuses.waitData,
+		]).then(() => {
 
-            return {
-                rows: [
-                    {
-                        localId: "clientInfo",
-                        template: function (obj) {
-                            return (
-                                `<div class='contact'>
+			return {
+				rows: [
+					{
+						localId: "clientInfo",
+						template: function (obj) {
+							return (
+								`<div class='contact'>
                                             <div class="infoWrapper">
                                                 ${obj.FirstName} ${obj.LastName || ""}
                                                 <div class="contactContainer">
@@ -75,60 +76,62 @@ export default class СlientInfo extends JetView {
                                                 <button class="editBtn"><span class="webix_icon wxi-pencil"></span> Edit</button>
                                             </div>                          
                                         </div>`
-                            );
-                        },
-                        onClick: {
-                            editBtn: (ev, id) => {
-                               // const contact = this.clientInfo.getValues()
-                                this.show(`edit`);
-                            },
+							);
+						},
+						onClick: {
+							editBtn: (ev, id) => {
+								this.show("edit");
+							},
 
-                            removeBtn: () => {
+							removeBtn: () => {
 
-                                webix
-                                    .confirm({
-                                        text: "Deleting cannot be undone. Delete contact?",
-                                    })
-                                    .then(
-                                        () => {
-                                            const id = this.getParam("id", true)
-                                            contacts.remove(id);
-                                            const activitiesToRemove = activities.find((activity) => {
-                                                return activity.ContactID == id
-                                            }).map(item => item.id);
+								webix
+									.confirm({
+										text: "Deleting cannot be undone. Delete contact?",
+									})
+									.then(
+										() => {
+											const id = this.getParam("id", true);
+											contacts.remove(id);
+											const activitiesToRemove = activities.find((activity) => {
+												return activity.ContactID == id;
+											}).map(item => item.id);
 
-                                            activities.remove(activitiesToRemove)
-                                            webix.message("Contact has been deleted.");
-                                        },
-                                        function () {
-                                            webix.message("Canceled");
-                                        }
-                                    );
-                                return false;
-                            }
-                        }
+											const filesToRemove = files.find((file) => file.ContactID == id).map(item => item.id);
 
-                    },
-                    UserActivities
-                ],
-            };
-        });
-    }
+											activities.remove(activitiesToRemove);
+											files.remove(filesToRemove);
+											webix.message("Contact has been deleted.");
+										},
+										function () {
+											webix.message("Canceled");
+										}
+									);
+								return false;
+							}
+						}
 
-    init() {
-        this.clientInfo = this.$$("clientInfo");
-    }
+					},
+					UserActivities
+				],
+			};
+		});
+	}
 
-    urlChange() {
-        let id = this.getParam("id", true);
+	init() {
+		this.clientInfo = this.$$("clientInfo");
+	}
 
-        if (id) {
-            const contact = contacts.getItem(id);
-            const status = statuses.find((s) => s.id == contact.StatusID);
-            const contactWithStatus = { ...contact, status: status[0].Value, icon: status[0].Icon };
+	urlChange() {
+		let id = this.getParam("id", true);
 
-            this.clientInfo.setValues(contactWithStatus);
-        }
+		if (id) {
+			const contact = contacts.getItem(id);
+			const status = statuses.find((s) => s.id == contact.StatusID);
+			const contactWithStatus = { ...contact, status: status[0].Value, icon: status[0].Icon };
 
-    }
+			this.clientInfo.setValues(contactWithStatus);
+		}
+
+	}
 }

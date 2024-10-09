@@ -131,7 +131,7 @@ export default class BaseContactForm extends JetView {
 							label: "Cancel",
 							width: 100,
 							click: () => {
-								this.show(`../clientInfo`);
+								this.show("../clientInfo");
 								this.form.clearValidation();
 							},
 						},
@@ -163,7 +163,7 @@ export default class BaseContactForm extends JetView {
 				TypeID: webix.rules.isNotEmpty,
 				ContactID: webix.rules.isNotEmpty,
 			},
-		}
+		};
 
 	}
 
@@ -179,7 +179,7 @@ export default class BaseContactForm extends JetView {
 		} else {
 			webix.message("Contact hasn't been changed.");
 		}
-		this.show(`../clientInfo`);
+		this.show("../clientInfo");
 	}
 
 	addContact(formData) {
@@ -189,7 +189,7 @@ export default class BaseContactForm extends JetView {
 			this.show(`../../contacts?id=${data.id}/clientInfo`);
 			this.form.clear();
 			webix.message("New activity is added");
-		})
+		});
 
 	}
 
