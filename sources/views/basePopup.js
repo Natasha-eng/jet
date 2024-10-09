@@ -40,6 +40,7 @@ export default class PopupView extends JetView {
 					},
 					{
 						view: "richselect",
+						localId: "select-contact",
 						label: "Contact",
 						name: "ContactID",
 						options: contacts,
@@ -118,9 +119,10 @@ export default class PopupView extends JetView {
 	init() {
 		this.form = this.$$("formPopup").getBody();
 	}
-	showWindow(activity) {
+	showWindow(activity, clientMode) {
 		const titleForm = this.$$("title");
 		const buttonForm = this.$$("popup-button");
+		const contactOption = this.$$("select-contact");
 		let action = "Add";
 		if (activity) {
 			action = "Edit";
@@ -129,6 +131,12 @@ export default class PopupView extends JetView {
 
 		titleForm.setValues({ action });
 		buttonForm.setValue(action);
+
+		if (clientMode) {
+			contactOption.setValue(this.getParam("id", true));
+			contactOption.disable();
+		}
+
 		this.getRoot().show();
 	}
 

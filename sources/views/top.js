@@ -16,7 +16,9 @@ export default class TopView extends JetView {
 			data: [
 				{ value: "Contacts", id: "contacts", icon: "webix_icon mdi mdi-account-group" },
 				{ value: "Activities", id: "activities", icon: "webix_icon mdi mdi-bell-ring" },
-				{ value: "Settings", id: "settings", icon: "webix_icon mdi mdi-cogs" }
+				{ value: "Settings", id: "settings", icon: "webix_icon mdi mdi-cogs" },
+
+
 			]
 		};
 
