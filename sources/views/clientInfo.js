@@ -53,8 +53,13 @@ export default class СlientInfo extends JetView {
                                                     <div class="infoItem">
                                                     
                                                         <div>
-                                                        <span class='webix_icon mdi mdi-calendar-check-outline'></span>
+                                                        <span class='webix_icon mdi mdi-cake'></span>
                                                         ${webix.i18n.dateFormatStr(obj.Birthday)}
+                                                        </div>
+
+                                                          <div>
+                                                        <span class='webix_icon mdi mdi-calendar-check-outline'></span>
+                                                        ${webix.i18n.dateFormatStr(obj.StartDate)}
                                                         </div>
         
                                                         <div>
@@ -74,7 +79,7 @@ export default class СlientInfo extends JetView {
                         },
                         onClick: {
                             editBtn: (ev, id) => {
-                                const contact = this.clientInfo.getValues()
+                               // const contact = this.clientInfo.getValues()
                                 this.show(`edit`);
                             },
 
