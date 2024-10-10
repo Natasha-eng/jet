@@ -2,7 +2,6 @@ import { JetView } from "webix-jet";
 import { activities } from "../models/activities";
 import { activityTypes } from "../models/activityTypes";
 import PopupView from "./basePopup";
-import { contacts } from "../models/contacts";
 
 export default class ActivitiesData extends JetView {
 	config() {
@@ -97,40 +96,20 @@ export default class ActivitiesData extends JetView {
 	}
 	init() {
 		this.activityTable = this.$$("activities-table");
-		const contactId = this.getParam("id", true);
-		this.filteredData = [];
-		if (contactId) {
-			this.filteredData = activities.find((obj) => {
-
-				return obj.ContactID == contactId;
-			});
-
-		}
-
-
-
 		this.on(activities.data, "onStoreUpdated", (id, obj, mode) => {
-			if (mode === "add" || mode === "delete") {
-				this.filteredData = activities.find((obj) => {
-					return obj.ContactID == contactId;
-				});
-			}
-			this.activityTable.parse(this.filteredData);
+			let contactID = this.getParam("id", true);
+			this.activityTable.clearAll();
+			this.activityTable.parse(activities.find(a => contactID == a.ContactID));
+			//this.activityTable.refresh()
 		});
-
-		this.activityTable.parse(this.filteredData);
 		this.Popup = this.ui(PopupView);
-
 	}
 
 
 	urlChange() {
 		let id = this.getParam("id", true);
-		this.filteredData = activities.find((obj) => {
-			return obj.ContactID.toString() === id;
-		});
-
-		this.activityTable.parse(this.filteredData);
+		this.activityTable.clearAll();
+		this.activityTable.parse(activities.find(a => id == a.ContactID));
 	}
 }
 

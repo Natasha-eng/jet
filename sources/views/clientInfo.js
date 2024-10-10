@@ -1,7 +1,6 @@
 import { JetView } from "webix-jet";
 import { contacts } from "../models/contacts";
 import { statuses } from "../models/statuses";
-import UserActivities from "./userActivities";
 import { activities } from "../models/activities";
 import { files } from "../models/files";
 
@@ -112,7 +111,7 @@ export default class СlientInfo extends JetView {
 						}
 
 					},
-					UserActivities
+					{ $subview: "userActivities" }
 				],
 			};
 		});
