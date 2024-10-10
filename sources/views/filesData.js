@@ -70,7 +70,7 @@ export default class FilesData extends JetView {
 
 		this.on(files.data, "onStoreUpdated", (id, obj, mode) => {
 			let contactID = this.getParam("id", true);
-			this.activityTable.clearAll();
+			this.files.clearAll();
 			this.files.parse(files.find(f => contactID == f.ContactID));
 		});
 	}

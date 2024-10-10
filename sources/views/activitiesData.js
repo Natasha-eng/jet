@@ -64,12 +64,8 @@ export default class ActivitiesData extends JetView {
 									})
 									.then(
 										function () {
-											//activities.waitSave(() => {
 												activities.remove(id);
-											//}).then((data) => {
 												webix.message("Activity has been deleted.");
-
-											//})
 										},
 										function () {
 											webix.message("Canceled");
