@@ -57,14 +57,15 @@ export default class ActivitiesData extends JetView {
 						editable: true,
 						scrollX: false,
 						onClick: {
-							removeBtn: function (ev, id) {
+							removeBtn:  (ev, id) =>  {
+								const activity = this.activityTable.getItem(id);
 								webix
 									.confirm({
 										text: "Deleting cannot be undone. Delete activity?",
 									})
 									.then(
 										function () {
-												activities.remove(id);
+												activities.remove(activity.id);
 												webix.message("Activity has been deleted.");
 										},
 										function () {

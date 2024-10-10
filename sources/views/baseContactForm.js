@@ -143,14 +143,14 @@ export default class BaseContactForm extends JetView {
 							click: () => {
 								const formData = this.form.getValues();
 								const isValid = this.form.validate();
-								// if (isValid) {
-								if (formData.id) {
-									this.editContact(formData);
-								} else {
-									this.addContact(formData);
-								}
+								if (isValid) {
+									if (formData.id) {
+										this.editContact(formData);
+									} else {
+										this.addContact(formData);
+									}
 
-								// }
+								}
 							},
 						},
 						{}
