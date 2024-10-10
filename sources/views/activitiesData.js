@@ -65,8 +65,8 @@ export default class ActivitiesData extends JetView {
 									})
 									.then(
 										function () {
-												activities.remove(activity.id);
-												webix.message("Activity has been deleted.");
+											activities.remove(activity.id);
+											webix.message("Activity has been deleted.");
 										},
 										function () {
 											webix.message("Canceled");
@@ -97,7 +97,7 @@ export default class ActivitiesData extends JetView {
 	}
 	init() {
 		this.activityTable = this.$$("activities-table");
-		this.on(activities.data, "onStoreUpdated", (id, obj, mode) => {
+		this.on(activities.data, "onStoreUpdated", () => {
 			let contactID = this.getParam("id", true);
 			this.activityTable.clearAll();
 			this.activityTable.parse(activities.find(a => contactID == a.ContactID));
