@@ -64,8 +64,12 @@ export default class ActivitiesData extends JetView {
 									})
 									.then(
 										function () {
-											activities.remove(id);
-											webix.message("Activity has been deleted.");
+											//activities.waitSave(() => {
+												activities.remove(id);
+											//}).then((data) => {
+												webix.message("Activity has been deleted.");
+
+											//})
 										},
 										function () {
 											webix.message("Canceled");
@@ -74,7 +78,7 @@ export default class ActivitiesData extends JetView {
 								return false;
 							},
 							editBtn: (ev, id) => {
-								const activity = activities.getItem(id);
+								const activity = this.activityTable.getItem(id);
 								this.Popup.showWindow(activity, true);
 							},
 						},
@@ -100,7 +104,7 @@ export default class ActivitiesData extends JetView {
 			let contactID = this.getParam("id", true);
 			this.activityTable.clearAll();
 			this.activityTable.parse(activities.find(a => contactID == a.ContactID));
-			//this.activityTable.refresh()
+			
 		});
 		this.Popup = this.ui(PopupView);
 	}
