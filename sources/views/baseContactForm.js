@@ -161,7 +161,8 @@ export default class BaseContactForm extends JetView {
 
 			rules: {
 				TypeID: webix.rules.isNotEmpty,
-				ContactID: webix.rules.isNotEmpty,
+				FirstName: webix.rules.isNotEmpty,
+				LastName: webix.rules.isNotEmpty,
 			},
 		};
 
