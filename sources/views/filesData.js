@@ -29,11 +29,4 @@ export default class FilesData extends JetView {
 	init() {
 		this.files = this.$$("files-table");
 	}
-
-
-	// urlChange() {
-	// 	let id = this.getParam("id", true);
-	// 	this.files.clearAll();
-	// 	this.files.parse(files.find(f => id == f.ContactID));
-	// }
 }

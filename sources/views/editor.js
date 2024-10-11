@@ -172,7 +172,7 @@ export default class ContactForm extends JetView {
 
 		let action = "Add";
 		if (contactId && mode === "edit") {
-			const contact = contacts.getItem(contactId)
+			const contact = contacts.getItem(contactId);
 			action = "Edit";
 			this.setFormData(contact);
 		}

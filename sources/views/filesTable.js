@@ -28,13 +28,6 @@ export default class FilesTable extends ActivitiesTable {
 					template: "<span class='removeBtn webix_icon wxi-trash'></span>",
 				},
 			]
-		})
+		});
 	}
-
-
-	// urlChange() {
-	// 	let id = this.getParam("id", true);
-	// 	this.files.clearAll();
-	// 	this.files.parse(files.find(f => id == f.ContactID));
-	// }
 }
