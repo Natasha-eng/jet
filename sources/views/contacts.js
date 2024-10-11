@@ -34,7 +34,7 @@ export default class ContactsView extends JetView {
 							value: "Add contact",
 							css: "webix_primary",
 							click: () => {
-								this.show("add");
+								this.show("editor?mode=add");
 							}
 
 						},

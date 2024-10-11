@@ -2,29 +2,23 @@ import { JetView } from "webix-jet";
 import { contacts } from "../models/contacts";
 import { statuses } from "../models/statuses";
 
-export default class BaseContactForm extends JetView {
-	constructor(app, config) {
-		super(app);
-		this.table_config = config;
-	}
-
+export default class ContactForm extends JetView {
 	config() {
 		return {
-			type: "form",
 			view: "form",
 			localId: "contactForm",
 			padding: 30,
 			elements: [
 
 				{
-					template: this.table_config.title,
+					template: "#action# contact",
+					localId: "contact-form",
 					height: 40,
 					borderless: true,
 					css: "popoUpTitle",
 				},
 
 				{
-
 					cols: [
 						//col1
 						{
@@ -137,8 +131,8 @@ export default class BaseContactForm extends JetView {
 						},
 						{
 							view: "button",
+							localId: "contact-button",
 							css: "webix_primary",
-							label: this.table_config.buttonValue,
 							width: 100,
 							click: () => {
 								const formData = this.form.getValues();
@@ -160,7 +154,7 @@ export default class BaseContactForm extends JetView {
 			],
 
 			rules: {
-				TypeID: webix.rules.isNotEmpty,
+				StatusID: webix.rules.isNotEmpty,
 				FirstName: webix.rules.isNotEmpty,
 				LastName: webix.rules.isNotEmpty,
 			},
@@ -170,6 +164,31 @@ export default class BaseContactForm extends JetView {
 
 	init() {
 		this.form = this.$$("contactForm");
+	}
+
+	showForm(mode, contactId) {
+		const formTitle = this.$$("contact-form");
+		const formButton = this.$$("contact-button");
+
+		let action = "Add";
+		if (contactId && mode === "edit") {
+			const contact = contacts.getItem(contactId)
+			action = "Edit";
+			this.setFormData(contact);
+		}
+
+		formTitle.setValues({ action });
+		formButton.setValue(action);
+	}
+
+	hideForm() {
+		this.form.clearValidation();
+		this.form.clear();
+		this.form.hide();
+	}
+
+	setFormData(selectedItem) {
+		this.form.setValues(selectedItem);
 	}
 
 
@@ -188,10 +207,14 @@ export default class BaseContactForm extends JetView {
 			contacts.add(formData);
 		}).then((data) => {
 			this.show(`../../contacts?id=${data.id}/clientInfo`);
-			this.form.clear();
 			webix.message("New activity is added");
 		});
-
 	}
 
+	urlChange() {
+		const contactId = this.getParam("id", true);
+		const mode = this.getParam("mode");
+
+		this.showForm(mode, contactId);
+	}
 }

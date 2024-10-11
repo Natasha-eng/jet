@@ -3,6 +3,7 @@ import { contacts } from "../models/contacts";
 import { statuses } from "../models/statuses";
 import { activities } from "../models/activities";
 import { files } from "../models/files";
+import UserActivities from "./userActivities";
 
 export default class СlientInfo extends JetView {
 	config() {
@@ -78,8 +79,8 @@ export default class СlientInfo extends JetView {
 							);
 						},
 						onClick: {
-							editBtn: (ev, id) => {
-								this.show("edit");
+							editBtn: () => {
+								this.show("editor?mode=edit");
 							},
 
 							removeBtn: () => {
@@ -111,7 +112,7 @@ export default class СlientInfo extends JetView {
 						}
 
 					},
-					{ $subview: "userActivities" }
+					{ $subview: UserActivities }
 				],
 			};
 		});
