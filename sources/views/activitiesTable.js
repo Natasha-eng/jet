@@ -5,9 +5,9 @@ import PopupView from "./basePopup.js";
 
 export default class ActivitiesTable extends JetView {
     constructor(app, config) {
-		super(app);
-		this.table_config = config;
-	}
+        super(app);
+        this.table_config = config;
+    }
 
     config() {
         return {
@@ -24,17 +24,17 @@ export default class ActivitiesTable extends JetView {
                     this.Popup.showWindow(activity);
                 },
 
-                removeBtn:  (ev, id) => {
+                removeBtn: (ev, id) => {
                     webix
                         .confirm({
                             text: "Deleting cannot be undone. Delete activity?",
                         })
                         .then(
-                             ()=>  {
+                            () => {
                                 this.table_config.collection.remove(id);
                                 webix.message("Activity has been deleted.");
                             },
-                             () => {
+                            () => {
                                 webix.message("Canceled");
                             }
                         );
@@ -47,14 +47,22 @@ export default class ActivitiesTable extends JetView {
     }
     init() {
         this.activityTable = this.$$("activities");
+        this.Popup = this.ui(PopupView);
+    }
 
+    urlChange() {
         this.activityTable.sync(this.table_config.collection, () => {
             const contactID = this.getParam("id", true);
             if (contactID) {
                 this.activityTable.filter(a => contactID == a.ContactID);
+            } else {
+                this.activityTable.waitData.then(() => {
+                    const firstId = this.activityTable.getFirstId();
+                    if (firstId) {
+                        this.activityTable.select(firstId)
+                    }
+                })
             }
         });
-
-        this.Popup = this.ui(PopupView);
     }
 }
