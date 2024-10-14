@@ -1,7 +1,6 @@
 import { JetView } from "webix-jet";
 import PopupView from "./basePopup.js";
 
-
 export default class ActivitiesTable extends JetView {
 	constructor(app, config) {
 		super(app);
@@ -46,6 +45,45 @@ export default class ActivitiesTable extends JetView {
 	}
 	init() {
 		this.activityTable = this.$$("activities");
+
+		this.on(this.activityTable, "onBeforeFilter", (id, value, config) => {
+			const contactID = this.getParam("id", true);
+
+			if (contactID) {
+
+				const detailsFilter = this.activityTable.getFilter("Details")?.value;
+
+				const activityFilter = this.activityTable.getFilter("TypeID")?.value;
+
+				this.activityTable.filter(a => {
+
+					if (contactID == a.ContactID) {
+						if (!detailsFilter && !activityFilter) {
+							return true;
+						} else if (detailsFilter && activityFilter) {
+							if (a.Details.toLowerCase().indexOf(detailsFilter) !== -1 && a.TypeID == activityFilter) {
+								return true;
+							}
+						} else if (detailsFilter) {
+							if (a.Details.toLowerCase().indexOf(detailsFilter) !== -1) {
+								return true;
+							}
+						} else if (activityFilter) {
+							if (a.TypeID == activityFilter) {
+								return true;
+							}
+						} else {
+							return false;
+						}
+
+					} else {
+						return false;
+					}
+				});
+			}
+
+		});
+
 		this.Popup = this.ui(PopupView);
 	}
 
