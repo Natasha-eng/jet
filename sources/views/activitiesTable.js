@@ -60,21 +60,17 @@ export default class ActivitiesTable extends JetView {
 					if (contactID == a.ContactID) {
 						if (!detailsFilter && !activityFilter) {
 							return true;
-						} else if (detailsFilter && activityFilter) {
-							if (a.Details.toLowerCase().indexOf(detailsFilter) !== -1 && a.TypeID == activityFilter) {
-								return true;
-							}
-						} else if (detailsFilter) {
-							if (a.Details.toLowerCase().indexOf(detailsFilter) !== -1) {
-								return true;
-							}
-						} else if (activityFilter) {
-							if (a.TypeID == activityFilter) {
-								return true;
-							}
-						} else {
-							return false;
 						}
+
+						if (detailsFilter) {
+							return contactID == a.ContactID && a.Details.toLowerCase().indexOf(detailsFilter) !== -1;
+						}
+
+						if (activityFilter) {
+							return a.TypeID == activityFilter;
+						}
+
+						return false
 
 					} else {
 						return false;
