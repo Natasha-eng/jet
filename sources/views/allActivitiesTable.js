@@ -49,4 +49,5 @@ export default class AllActivitiesTable extends ActivitiesTable {
 			]
 		});
 	}
+
 }

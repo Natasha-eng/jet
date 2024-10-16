@@ -8,45 +8,50 @@ export default class ActivitiesTable extends JetView {
 	}
 
 	config() {
+		const _ = this.app.getService("locale")._;
 		return {
-			view: "datatable",
-			localId: "activities",
-			columns: this.table_config.columns,
-			select: true,
-			editable: true,
-			scrollX: false,
-			css: "webix_shadow_medium",
-			onClick: {
-				editBtn: (ev, id) => {
-					const activity = this.table_config.collection.getItem(id);
-					this.Popup.showWindow(activity);
-				},
+			localId: "tablelayout",
+			rows: [
+				{
+					view: "datatable",
+					localId: "activities",
+					columns: this.table_config.columns,
+					select: true,
+					editable: true,
+					scrollX: false,
+					css: "webix_shadow_medium",
+					onClick: {
+						editBtn: (ev, id) => {
+							const activity = this.table_config.collection.getItem(id);
+							this.Popup.showWindow(activity);
+						},
 
-				removeBtn: (ev, id) => {
-					webix
-						.confirm({
-							text: "Deleting cannot be undone. Delete activity?",
-						})
-						.then(
-							() => {
-								this.table_config.collection.remove(id);
-								webix.message("Activity has been deleted.");
-							},
-							() => {
-								webix.message("Canceled");
-							}
-						);
-					return false;
+						removeBtn: (ev, id) => {
+							webix
+								.confirm({
+									text: _("Deleting cannot be undone. Delete activity?"),
+								})
+								.then(
+									() => {
+										this.table_config.collection.remove(id);
+										webix.message(_("Activity has been deleted."));
+									},
+									() => {
+										webix.message(_("Canceled"));
+									}
+								);
+							return false;
+						}
+					}
 				}
-			}
+			]
+		}
 
-
-		};
 	}
 	init() {
 		this.activityTable = this.$$("activities");
 
-		this.on(this.activityTable, "onBeforeFilter", (id, value, config) => {
+		this.on(this.activityTable, "onBeforeFilter", () => {
 			const contactID = this.getParam("id", true);
 
 			if (contactID) {
@@ -80,7 +85,96 @@ export default class ActivitiesTable extends JetView {
 
 		});
 
+		const id = this.getParam("id", true);
+
+		!id && this.$$("tablelayout").addView({
+			view: "tabbar", localId: "tab-filter", value: 1, options: [
+				{ id: 1, value: "common" },
+				{ id: 2, value: "completed" },
+				{ id: 3, value: "overdue" },
+				{ id: 4, value: "today" },
+				{ id: 5, value: "tomorrow" },
+				{ id: 6, value: "this week" },
+				{ id: 7, value: "this month" }
+			],
+			on: {
+				onChange: () => {
+					this.activityTable.filterByAll()
+				},
+
+			}
+		}, 0)
+
+		this.activityTable.registerFilter(
+			this.$$("tab-filter"),
+			{
+				compare: (cellValue, tab_data, obj) => {
+
+					if (tab_data == 2) {
+						return obj.State == "Close"
+					}
+
+					const dateMilliseconds = obj.DueDate.valueOf();
+					const now = (new Date()).getTime();
+					const today = new Date();
+
+					if (tab_data == 3) {
+						return obj.State == "Open" && dateMilliseconds < now
+					}
+
+					const todayWithoutTime = this.toDateWithoutTime(today);
+					const dateWithoutTime = this.toDateWithoutTime(obj.DueDate);
+
+					if (tab_data == 4) {
+						return dateWithoutTime == todayWithoutTime
+					}
+
+					let tomorrow = new Date();
+					tomorrow.setDate(today.getDate() + 1);
+
+					if (tab_data == 5) {
+						tomorrow = this.toDateWithoutTime(tomorrow)
+						return tomorrow == dateWithoutTime
+					}
+
+					if (tab_data == 6) {
+						const today = new Date();
+						const curentWeek = this.getWeek(today);
+						const objWeek = this.getWeek(obj.DueDate);
+						return curentWeek == objWeek
+					}
+
+					if (tab_data == 7) {
+						const currentMonth = new Date().getMonth();
+						const objMonth = obj.DueDate.getMonth()
+						return currentMonth === objMonth
+					}
+
+					return obj
+				}
+			},
+			{
+				getValue: function (view) {
+					return view.getValue();
+				},
+				setValue: function (view, value) {
+					view.setValue(value)
+				}
+			}
+		);
+
+
 		this.Popup = this.ui(PopupView);
+	}
+
+	toDateWithoutTime = (date) => Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0)
+
+	getWeek = (date) => {
+		let yearStart = +new Date(date.getFullYear(), 0, 1);
+		let today = +new Date(date.getFullYear(), date.getMonth(), date.getDate());
+		let dayOfyear = ((today - yearStart + 1) / 86400000);
+		let week = Math.ceil(dayOfyear / 7)
+		return week
 	}
 
 	urlChange() {

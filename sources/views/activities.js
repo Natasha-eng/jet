@@ -5,17 +5,23 @@ import AllActivitiesTable from "./allActivitiesTable.js";
 
 export default class DataView extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
 		return {
 			rows: [
 				{
-					view: "button",
-					value: "Add activity",
-					inputWidth: 150,
-					css: "webix_primary",
-					click: () => {
-						this.Popup.showWindow();
-					}
+					cols: [
+						{
+							view: "button",
+							value: _("Add activity"),
+							inputWidth: 200,
+							css: "webix_primary",
+							click: () => {
+								this.Popup.showWindow();
+							}
+						},
+					]
 				},
+
 				AllActivitiesTable
 			]
 		};

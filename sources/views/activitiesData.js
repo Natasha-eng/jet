@@ -5,13 +5,14 @@ import CotnactActivitiesTable from "./contactActivitiesTable";
 
 export default class ActivitiesData extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
 		return activities.waitData.then(() => {
 			return {
 				rows: [
 					CotnactActivitiesTable,
 					{
 						view: "button",
-						value: "Add activity",
+						value: _("Add activity"),
 						css: "webix_primary",
 						inputWidth: 200,
 						click: () => {

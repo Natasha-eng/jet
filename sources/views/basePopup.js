@@ -6,6 +6,7 @@ import { contacts } from "../models/contacts";
 export default class PopupView extends JetView {
 
 	config() {
+		const _ = this.app.getService("locale")._;
 		return {
 			view: "popup",
 			localId: "formPopup",
@@ -27,13 +28,13 @@ export default class PopupView extends JetView {
 					},
 					{
 						view: "textarea",
-						label: "Details",
+						label: _("Details"),
 						name: "Details",
 						invalidMessage: "Details must be filled in",
 					},
 					{
 						view: "richselect",
-						label: "Type",
+						label: _("Type"),
 						name: "TypeID",
 						options: activityTypes,
 						invalidMessage: "Type must be selected",
@@ -41,7 +42,7 @@ export default class PopupView extends JetView {
 					{
 						view: "richselect",
 						localId: "select-contact",
-						label: "Contact",
+						label: _("Contact"),
 						name: "ContactID",
 						options: contacts,
 						invalidMessage: "Contact must be selected",
@@ -49,12 +50,12 @@ export default class PopupView extends JetView {
 					{
 						view: "datepicker",
 						name: "DueDate",
-						label: "Date",
+						label: _("Date"),
 					},
 					{
 						view: "datepicker",
 						name: "TimeDate",
-						label: "Time",
+						label: _("Time"),
 						type: "time",
 						twelve: false,
 						suggest: {
@@ -76,8 +77,8 @@ export default class PopupView extends JetView {
 						cols: [
 							{
 								view: "button",
-								label: "Cancel",
-								width: 100,
+								label: _("Cancel"),
+								inputWidth: 150,
 								click: () => {
 									this.hideWindow();
 								},
@@ -87,7 +88,7 @@ export default class PopupView extends JetView {
 								localId: "popup-button",
 								css: "webix_primary",
 
-								width: 100,
+								inputWidth: 150,
 								click: () => {
 
 									const isValid = this.form.validate();
@@ -118,14 +119,16 @@ export default class PopupView extends JetView {
 
 	init() {
 		this.form = this.$$("formPopup").getBody();
+		this._ = this.app.getService("locale")._;
 	}
 	showWindow(activity, clientMode) {
+		
 		const titleForm = this.$$("title");
 		const buttonForm = this.$$("popup-button");
 		const contactOption = this.$$("select-contact");
-		let action = "Add";
+		let action = this._ ("Add");
 		if (activity) {
-			action = "Edit";
+			action = this._ ("Edit");
 			this.setFormData(activity);
 		}
 
@@ -149,16 +152,16 @@ export default class PopupView extends JetView {
 	editActivity(formData) {
 		if (this.form.isDirty()) {
 			activities.updateItem(formData.id, formData);
-			webix.message("Activity is updated.");
+			webix.message(this._("Activity is updated."));
 		} else {
-			webix.message("Contact hasn't been changed.");
+			webix.message(this._("Contact hasn't been changed."));
 		}
 	}
 
 	addActivity(formData) {
 		activities.add(formData);
 		this.form.clear();
-		webix.message("New activity is added");
+		webix.message(this._("New activity is added"));
 	}
 
 	setFormData(selecteItem) {

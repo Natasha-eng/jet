@@ -3,10 +3,39 @@ import { contacts } from "../models/contacts";
 
 export default class ContactsView extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
 		return {
 			cols: [
 				{
 					rows: [
+						{
+							view: "text",
+							localId: "contacts-filter",
+							on: {
+								onTimedKeyPress: () => {
+									const value = this.$$("contacts-filter").getValue();
+
+
+									if (!value) {
+										return this.contacts.filter();
+									}
+									const inputArr = value.split(" ");
+
+									this.contacts.filter((obj) => {
+										return inputArr.every(val => {
+											return obj.FirstName.toLowerCase().indexOf(val) > -1 ||
+												obj.LastName.toLowerCase().indexOf(val) > -1 ||
+												obj.Job.toLowerCase().indexOf(val) > -1 ||
+												obj.Skype.toLowerCase().indexOf(val) > -1 ||
+												obj.Company.toLowerCase().indexOf(val) > -1 ||
+												obj.Website.toLowerCase().indexOf(val) > -1 ||
+												obj.Email.toLowerCase().indexOf(val) > -1;
+										});
+									});
+
+								}
+							}
+						},
 						{
 							view: "list",
 							id: "contactsView",
@@ -31,7 +60,7 @@ export default class ContactsView extends JetView {
 						},
 						{
 							view: "button",
-							value: "Add contact",
+							value: _("Add contact"),
 							css: "webix_primary",
 							click: () => {
 								this.show("editor?mode=add");

@@ -4,6 +4,7 @@ import { JetView, plugins } from "webix-jet";
 
 export default class TopView extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
 		const header = {
 			type: "header", template: this.app.config.name, css: "webix_header app_header"
 		};
@@ -14,9 +15,9 @@ export default class TopView extends JetView {
 			width: 180, layout: "y", select: true,
 			template: "<span class='webix_icon #icon#'></span> #value# ",
 			data: [
-				{ value: "Contacts", id: "contacts", icon: "webix_icon mdi mdi-account-group" },
-				{ value: "Activities", id: "activities", icon: "webix_icon mdi mdi-bell-ring" },
-				{ value: "Settings", id: "settings", icon: "webix_icon mdi mdi-cogs" },
+				{ value: _("Contacts"), id: "contacts", icon: "webix_icon mdi mdi-account-group" },
+				{ value: _("Activities"), id: "activities", icon: "webix_icon mdi mdi-bell-ring" },
+				{ value: _("Settings"), id: "settings", icon: "webix_icon mdi mdi-cogs" },
 
 
 			]

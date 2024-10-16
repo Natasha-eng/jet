@@ -4,6 +4,7 @@ import { statuses } from "../models/statuses";
 
 export default class ContactForm extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
 		return {
 			view: "form",
 			localId: "contactForm",
@@ -11,7 +12,7 @@ export default class ContactForm extends JetView {
 			elements: [
 
 				{
-					template: "#action# contact",
+					template: "#action#",
 					localId: "contact-form",
 					height: 40,
 					borderless: true,
@@ -27,24 +28,24 @@ export default class ContactForm extends JetView {
 
 								{
 									view: "text",
-									label: "First name",
+									label: _("First name"),
 									name: "FirstName",
 									invalidMessage: "First name must be filled in",
 								},
 								{
 									view: "text",
-									label: "Last name",
+									label: _("Last name"),
 									name: "LastName",
 									invalidMessage: "Last name must be selected",
 								},
 								{
 									view: "datepicker",
 									name: "StartDate",
-									label: "Joining date",
+									label: _("Joining date"),
 								},
 								{
 									view: "richselect",
-									label: "Status",
+									label: _("Status"),
 									name: "StatusID",
 									options: {
 										body: {
@@ -56,25 +57,25 @@ export default class ContactForm extends JetView {
 								},
 								{
 									view: "text",
-									label: "Job",
+									label: _("Job"),
 									name: "Job",
 									invalidMessage: "Job name must be selected",
 								},
 								{
 									view: "text",
-									label: "Company",
+									label: _("Company"),
 									name: "Company",
 									invalidMessage: "Company name must be selected",
 								},
 								{
 									view: "text",
-									label: "Website",
+									label: _("Website"),
 									name: "Website",
 									invalidMessage: "Website name must be selected",
 								},
 								{
 									view: "text",
-									label: "Address",
+									label: _("Address"),
 									name: "Address",
 									invalidMessage: "Address name must be selected",
 								},
@@ -89,19 +90,19 @@ export default class ContactForm extends JetView {
 
 								{
 									view: "text",
-									label: "Email",
+									label: _("Email"),
 									name: "Email",
 
 								},
 								{
 									view: "text",
-									label: "Skype",
+									label: _("Skype"),
 									name: "Skype",
 
 								},
 								{
 									view: "text",
-									label: "Phone",
+									label: _("Phone"),
 									name: "Phone",
 
 								},
@@ -109,7 +110,7 @@ export default class ContactForm extends JetView {
 								{
 									view: "datepicker",
 									name: "Birthday",
-									label: "Birthday",
+									label: _("Birthday"),
 								},
 
 							]
@@ -122,8 +123,8 @@ export default class ContactForm extends JetView {
 					cols: [
 						{
 							view: "button",
-							label: "Cancel",
-							width: 100,
+							label: _("Cancel"),
+							width: 150,
 							click: () => {
 								this.show("../clientInfo");
 								this.form.clearValidation();
@@ -133,7 +134,7 @@ export default class ContactForm extends JetView {
 							view: "button",
 							localId: "contact-button",
 							css: "webix_primary",
-							width: 100,
+							width: 150,
 							click: () => {
 								const formData = this.form.getValues();
 								const isValid = this.form.validate();
@@ -164,16 +165,17 @@ export default class ContactForm extends JetView {
 
 	init() {
 		this.form = this.$$("contactForm");
+		this._ = this.app.getService("locale")._;
 	}
 
 	showForm(mode, contactId) {
 		const formTitle = this.$$("contact-form");
 		const formButton = this.$$("contact-button");
 
-		let action = "Add";
+		let action = this._("Add");
 		if (contactId && mode === "edit") {
 			const contact = contacts.getItem(contactId);
-			action = "Edit";
+			action = this._("Edit");
 			this.setFormData(contact);
 		}
 
@@ -195,9 +197,9 @@ export default class ContactForm extends JetView {
 	editContact(formData) {
 		if (this.form.isDirty()) {
 			contacts.updateItem(formData.id, formData);
-			webix.message("Contact is updated.");
+			webix.message(this._("Contact is updated."));
 		} else {
-			webix.message("Contact hasn't been changed.");
+			webix.message(this._("Contact hasn't been changed."));
 		}
 		this.show("../clientInfo");
 	}
@@ -207,7 +209,7 @@ export default class ContactForm extends JetView {
 			contacts.add(formData);
 		}).then((data) => {
 			this.show(`../../contacts?id=${data.id}/clientInfo`);
-			webix.message("New activity is added");
+			webix.message(this._("New activity is added"));
 		});
 	}
 

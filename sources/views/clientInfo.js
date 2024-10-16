@@ -7,6 +7,7 @@ import UserActivities from "./userActivities";
 
 export default class СlientInfo extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
 		return webix.promise.all([
 			contacts.waitData,
 			statuses.waitData,
@@ -72,8 +73,8 @@ export default class СlientInfo extends JetView {
                                             </div>
         
                                             <div class="contact-buttons">
-                                                <button class="removeBtn"><span class="webix_icon wxi-trash"></span> Delete</button>
-                                                <button class="editBtn"><span class="webix_icon wxi-pencil"></span> Edit</button>
+                                                <button class="removeBtn"><span class="webix_icon wxi-trash"></span> ${_("Delete")}</button>
+                                                <button class="editBtn"><span class="webix_icon wxi-pencil"></span> ${_("Edit")}</button>
                                             </div>                          
                                         </div>`
 							);
@@ -87,7 +88,7 @@ export default class СlientInfo extends JetView {
 
 								webix
 									.confirm({
-										text: "Deleting cannot be undone. Delete contact?",
+										text: _("Deleting cannot be undone. Delete contact?"),
 									})
 									.then(
 										() => {
@@ -101,10 +102,10 @@ export default class СlientInfo extends JetView {
 
 											activities.remove(activitiesToRemove);
 											files.remove(filesToRemove);
-											webix.message("Contact has been deleted.");
+											webix.message(_("Contact has been deleted."));
 										},
 										function () {
-											webix.message("Canceled");
+											webix.message(_("Canceled"));
 										}
 									);
 								return false;

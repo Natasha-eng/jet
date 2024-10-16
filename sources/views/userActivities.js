@@ -4,7 +4,7 @@ import ActivitiesData from "./activitiesData";
 
 export default class UserActivities extends JetView {
 	config() {
-     
+
 		return {
 			rows: [
 				{
@@ -30,7 +30,7 @@ export default class UserActivities extends JetView {
 				},
 			]
 		};
-       
+
 
 	}
 }
