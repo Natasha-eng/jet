@@ -114,25 +114,24 @@ export default class ActivitiesTable extends JetView {
 						return obj.State == "Close"
 					}
 
-					const dateMilliseconds = obj.DueDate.valueOf();
-					const now = (new Date()).getTime();
 					const today = new Date();
 
 					if (tab_data == 3) {
+						const dateMilliseconds = obj.DueDate.valueOf();
+						const now = (new Date()).getTime();
 						return obj.State == "Open" && dateMilliseconds < now
 					}
 
-					const todayWithoutTime = this.toDateWithoutTime(today);
 					const dateWithoutTime = this.toDateWithoutTime(obj.DueDate);
 
 					if (tab_data == 4) {
+						const todayWithoutTime = this.toDateWithoutTime(today);
 						return dateWithoutTime == todayWithoutTime
 					}
 
-					let tomorrow = new Date();
-					tomorrow.setDate(today.getDate() + 1);
-
 					if (tab_data == 5) {
+						let tomorrow = new Date();
+						tomorrow.setDate(today.getDate() + 1);
 						tomorrow = this.toDateWithoutTime(tomorrow)
 						return tomorrow == dateWithoutTime
 					}
