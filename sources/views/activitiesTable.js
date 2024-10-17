@@ -46,7 +46,7 @@ export default class ActivitiesTable extends JetView {
 	init() {
 		this.activityTable = this.$$("activities");
 
-		this.on(this.activityTable, "onBeforeFilter", (id, value, config) => {
+		this.on(this.activityTable, "onAfterFilter", () => {
 			const contactID = this.getParam("id", true);
 
 			if (contactID) {
@@ -62,8 +62,12 @@ export default class ActivitiesTable extends JetView {
 							return true;
 						}
 
+						if (detailsFilter && activityFilter) {
+							return a.Details.toLowerCase().includes(detailsFilter) && a.TypeID == activityFilter;
+						}
+
 						if (detailsFilter) {
-							return contactID == a.ContactID && a.Details.toLowerCase().indexOf(detailsFilter) !== -1;
+							return a.Details.toLowerCase().includes(detailsFilter);
 						}
 
 						if (activityFilter) {
