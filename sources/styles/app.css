@@ -125,11 +125,12 @@
 }
 
 .contact-buttons {
-  flex: 30%;
+  flex: 40%;
+  text-align: end;
 }
 
 .contact-buttons button {
-  width: 80px;
+  width: 150px;
   padding: 7px;
   border-radius: 5px;
 }
