@@ -46,7 +46,14 @@ const words = {
 	"Skype": "Скайп",
 	"Phone": "Телефон",
 	"Birthday": "День рождения",
-	"Joining date": "Дата вступления"
+	"Joining date": "Дата вступления",
+	"common": "общие",
+	"completed": "завершенные",
+	"overdue": "истекшие",
+	"today": "сегодня",
+	"tomorrow": "завтра",
+	"this week": "на этой неделе",
+	"this month": "в этом месяце"
 };
 
 export default words;

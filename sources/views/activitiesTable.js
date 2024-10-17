@@ -50,6 +50,7 @@ export default class ActivitiesTable extends JetView {
 	}
 	init() {
 		this.activityTable = this.$$("activities");
+		this._ = this.app.getService("locale")._;
 
 		this.on(this.activityTable, "onBeforeFilter", () => {
 			const contactID = this.getParam("id", true);
@@ -68,7 +69,7 @@ export default class ActivitiesTable extends JetView {
 						}
 
 						if (detailsFilter) {
-							return contactID == a.ContactID && a.Details.toLowerCase().indexOf(detailsFilter) !== -1;
+							return a.Details.toLowerCase().includes(detailsFilter);
 						}
 
 						if (activityFilter) {
@@ -89,13 +90,13 @@ export default class ActivitiesTable extends JetView {
 
 		!id && this.$$("tablelayout").addView({
 			view: "tabbar", localId: "tab-filter", value: 1, options: [
-				{ id: 1, value: "common" },
-				{ id: 2, value: "completed" },
-				{ id: 3, value: "overdue" },
-				{ id: 4, value: "today" },
-				{ id: 5, value: "tomorrow" },
-				{ id: 6, value: "this week" },
-				{ id: 7, value: "this month" }
+				{ id: 1, value: this._("common") },
+				{ id: 2, value: this._("completed") },
+				{ id: 3, value: this._("overdue") },
+				{ id: 4, value: this._("today") },
+				{ id: 5, value: this._("tomorrow") },
+				{ id: 6, value: this._("this week") },
+				{ id: 7, value: this._("this month") }
 			],
 			on: {
 				onChange: () => {
@@ -105,47 +106,46 @@ export default class ActivitiesTable extends JetView {
 			}
 		}, 0)
 
-		this.activityTable.registerFilter(
+		!id && this.activityTable.registerFilter(
 			this.$$("tab-filter"),
 			{
 				compare: (cellValue, tab_data, obj) => {
-
-					if (tab_data == 2) {
-						return obj.State == "Close"
+					if (Number(tab_data) === 2) {
+						return obj.State === "Close"
 					}
 
 					const today = new Date();
 
-					if (tab_data == 3) {
+					if (Number(tab_data) === 3) {
 						const dateMilliseconds = obj.DueDate.valueOf();
 						const now = (new Date()).getTime();
-						return obj.State == "Open" && dateMilliseconds < now
+						return obj.State === "Open" && dateMilliseconds < now
 					}
 
 					const dateWithoutTime = this.toDateWithoutTime(obj.DueDate);
 
-					if (tab_data == 4) {
+					if (Number(tab_data) === 4) {
 						const todayWithoutTime = this.toDateWithoutTime(today);
 						return dateWithoutTime == todayWithoutTime
 					}
 
-					if (tab_data == 5) {
+					if (Number(tab_data) === 5) {
 						let tomorrow = new Date();
 						tomorrow.setDate(today.getDate() + 1);
-						tomorrow = this.toDateWithoutTime(tomorrow)
-						return tomorrow == dateWithoutTime
+						tomorrow = this.toDateWithoutTime(tomorrow);
+						return tomorrow === dateWithoutTime
 					}
 
-					if (tab_data == 6) {
+					if (Number(tab_data) === 6) {
 						const today = new Date();
 						const curentWeek = this.getWeek(today);
 						const objWeek = this.getWeek(obj.DueDate);
-						return curentWeek == objWeek
+						return curentWeek === objWeek
 					}
 
-					if (tab_data == 7) {
+					if (Number(tab_data) === 7) {
 						const currentMonth = new Date().getMonth();
-						const objMonth = obj.DueDate.getMonth()
+						const objMonth = obj.DueDate.getMonth();
 						return currentMonth === objMonth
 					}
 
@@ -157,7 +157,7 @@ export default class ActivitiesTable extends JetView {
 					return view.getValue();
 				},
 				setValue: function (view, value) {
-					view.setValue(value)
+					view.setValue(value);
 				}
 			}
 		);
@@ -166,14 +166,14 @@ export default class ActivitiesTable extends JetView {
 		this.Popup = this.ui(PopupView);
 	}
 
-	toDateWithoutTime = (date) => Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0)
+	toDateWithoutTime = (date) => Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
 
 	getWeek = (date) => {
 		let yearStart = +new Date(date.getFullYear(), 0, 1);
 		let today = +new Date(date.getFullYear(), date.getMonth(), date.getDate());
 		let dayOfyear = ((today - yearStart + 1) / 86400000);
-		let week = Math.ceil(dayOfyear / 7)
-		return week
+		let week = Math.ceil(dayOfyear / 7);
+		return week;
 	}
 
 	urlChange() {

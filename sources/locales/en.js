@@ -44,7 +44,14 @@ const words = {
 	"Skype": "Skype",
 	"Phone": "Phone",
 	"Birthday": "Birthday",
-	"Joining date": "Joining date"
+	"Joining date": "Joining date",
+	"common": "common",
+	"completed": "completed",
+	"overdue": "overdue",
+	"today": "today",
+	"tomorrow": "tomorrow",
+	"this week": "this week",
+	"this month": "this month"
 
 };
 
