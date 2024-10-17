@@ -52,7 +52,7 @@ export default class ActivitiesTable extends JetView {
 		this.activityTable = this.$$("activities");
 		this._ = this.app.getService("locale")._;
 
-		this.on(this.activityTable, "onBeforeFilter", () => {
+		this.on(this.activityTable, "onAfterFilter", () => {
 			const contactID = this.getParam("id", true);
 
 			if (contactID) {
@@ -68,12 +68,16 @@ export default class ActivitiesTable extends JetView {
 							return true;
 						}
 
+						if (detailsFilter && activityFilter) {
+							return a.Details.toLowerCase().includes(detailsFilter) && a.TypeID == activityFilter
+						}
+
 						if (detailsFilter) {
-							return a.Details.toLowerCase().includes(detailsFilter);
+							return a.Details.toLowerCase().includes(detailsFilter) && contactID == a.ContactID;
 						}
 
 						if (activityFilter) {
-							return a.TypeID == activityFilter;
+							return a.TypeID == activityFilter && contactID == a.ContactID;
 						}
 
 						return false
