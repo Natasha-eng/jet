@@ -69,15 +69,15 @@ export default class ActivitiesTable extends JetView {
 						}
 
 						if (detailsFilter && activityFilter) {
-							return a.Details.toLowerCase().includes(detailsFilter) && a.TypeID == activityFilter
+							return a.Details.toLowerCase().includes(detailsFilter) && a.TypeID == activityFilter;
 						}
 
 						if (detailsFilter) {
-							return a.Details.toLowerCase().includes(detailsFilter) && contactID == a.ContactID;
+							return a.Details.toLowerCase().includes(detailsFilter);
 						}
 
 						if (activityFilter) {
-							return a.TypeID == activityFilter && contactID == a.ContactID;
+							return a.TypeID == activityFilter;
 						}
 
 						return false
